@@ -43,6 +43,7 @@ Do not contradict a decision there; if one looks wrong, raise it with CJ instead
     `s3://psb-tfstate-<account id>/bootstrap-backup/terraform.tfstate`. Re-copy after any
     bootstrap apply.
   - Repo is public (D41); odds data and model weights never go in the repo.
-- Next, step 2 (data): Singapore Pools odds scraper first (all in-scope markets, J1 + Serie A),
-  so odds history starts accumulating; then results, HT scores, goal minutes, xG, lineups and
-  injuries per the Source map in `docs/design.md`.
+- Next, step 2 (data): results, HT scores, goal minutes, xG, lineups and injuries per the
+  Source map in `docs/design.md`.
+  - Singapore Pools odds scraper is on hold: their website T&Cs (clause 2.2.3) prohibit
+    scraping. Do not build it until CJ records a decision (likely D42) on how odds are sourced.
