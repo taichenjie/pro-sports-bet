@@ -24,7 +24,9 @@ Terraform 1.10 or newer, and git.
 
 ### 1. Create the GitHub repo
 
-On GitHub: **New repository** → name `pro-sports-bet` → **Private** → no README, no .gitignore.
+On GitHub: **New repository** → name `pro-sports-bet` → **Public** → no README, no .gitignore.
+Public because GitHub Free restricts environment branches only on public repos (D41); odds data
+and model weights never go in the repo.
 
 ```bash
 cd pro-sports-bet
@@ -41,14 +43,20 @@ The first push runs the `ci` workflow. The `terraform` workflow will fail until 
 
 ```bash
 cd infra/bootstrap
-cp terraform.tfvars.example terraform.tfvars   # fill in your GitHub username and email
+cp terraform.tfvars.example terraform.tfvars   # fill in GitHub username, numeric owner/repo IDs, email
 terraform init
 terraform apply
 ```
 
+Bootstrap looks up the account's GitHub OIDC provider (`token.actions.githubusercontent.com`)
+rather than creating it; in this account it is owned by the platform10 project. On a fresh account,
+create the provider first. The roles trust ID-based subjects (`repo:<owner>@<id>/<repo>@<id>:...`),
+which is why the numeric IDs are needed.
+
 Note the three outputs: `state_bucket`, `plan_role_arn`, `apply_role_arn`.
 
 Keep `infra/bootstrap/terraform.tfstate` safe (it is git-ignored). It is the only record of these resources.
+Back it up to `s3://psb-tfstate-<account id>/bootstrap-backup/terraform.tfstate` after every apply.
 
 AWS will email you to confirm the budget alert subscription: accept it.
 
