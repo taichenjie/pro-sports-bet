@@ -28,7 +28,9 @@ data "aws_caller_identity" "current" {}
 locals {
   account_id   = data.aws_caller_identity.current.account_id
   state_bucket = "psb-tfstate-${local.account_id}"
-  repo         = "${var.github_owner}/${var.github_repo}"
+  # The repo uses immutable OIDC subjects: owner and repo carry their numeric IDs, so a
+  # deleted and re-created repo with the same name cannot assume these roles.
+  repo = "${var.github_owner}@${var.github_owner_id}/${var.github_repo}@${var.github_repo_id}"
 }
 
 # ---------- Terraform state bucket ----------

@@ -15,6 +15,16 @@ variable "github_repo" {
   default     = "pro-sports-bet"
 }
 
+variable "github_owner_id" {
+  description = "Numeric ID of the GitHub owner (gh api users/<owner> --jq .id)"
+  type        = number
+}
+
+variable "github_repo_id" {
+  description = "Numeric ID of the GitHub repo (gh api repos/<owner>/<repo> --jq .id)"
+  type        = number
+}
+
 variable "alert_email" {
   description = "Email for AWS budget alerts"
   type        = string

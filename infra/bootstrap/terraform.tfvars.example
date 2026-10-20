@@ -1,5 +1,7 @@
 # Copy to terraform.tfvars and fill in. terraform.tfvars is git-ignored.
 github_owner       = "your-github-username"
 github_repo        = "pro-sports-bet"
+github_owner_id    = 0 # gh api users/<owner> --jq .id
+github_repo_id     = 0 # gh api repos/<owner>/<repo> --jq .id
 alert_email        = "you@example.com"
 monthly_budget_usd = "20"
