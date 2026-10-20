@@ -1,5 +1,5 @@
 # One-time bootstrap, run locally by CJ with his own AWS credentials.
-# Creates: Terraform state bucket, GitHub OIDC provider, and two roles for GitHub Actions:
+# Creates: Terraform state bucket and two roles for GitHub Actions:
 #   - plan role:  read-only, assumable from pull requests
 #   - apply role: deploys, assumable only from the GitHub "prod" environment (main branch)
 
@@ -63,10 +63,10 @@ resource "aws_s3_bucket_public_access_block" "state" {
 
 # ---------- GitHub OIDC ----------
 
-resource "aws_iam_openid_connect_provider" "github" {
-  url             = "https://token.actions.githubusercontent.com"
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+# One provider per URL per account; it already exists, owned by platform10's bootstrap.
+# Looked up, not managed here, so neither project's Terraform fights over it.
+data "aws_iam_openid_connect_provider" "github" {
+  url = "https://token.actions.githubusercontent.com"
 }
 
 data "aws_iam_policy_document" "trust_pr" {
@@ -74,7 +74,7 @@ data "aws_iam_policy_document" "trust_pr" {
     actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github.arn]
+      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
     }
     condition {
       test     = "StringEquals"
@@ -94,7 +94,7 @@ data "aws_iam_policy_document" "trust_main" {
     actions = ["sts:AssumeRoleWithWebIdentity"]
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github.arn]
+      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
     }
     condition {
       test     = "StringEquals"
