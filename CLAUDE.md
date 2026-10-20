@@ -35,9 +35,14 @@ Do not contradict a decision there; if one looks wrong, raise it with CJ instead
 
 ## Current status
 
-- Step 1 (bootstrap): repo, CI green. Remaining: CJ runs `infra/bootstrap`, adds GitHub repo
-  variables TF_STATE_BUCKET, AWS_PLAN_ROLE_ARN, AWS_APPLY_ROLE_ARN, creates environment `prod`
-  restricted to `main`, then the terraform workflow is re-run.
+- Step 1 (bootstrap): done. `infra/bootstrap` applied 20 Oct 2026; repo variables set;
+  environment `prod` restricted to `main`; terraform workflow plans on PRs, applies on merge.
+  - The GitHub OIDC provider is shared with CJ's platform10 project, which owns it; bootstrap
+    only looks it up. Destroying platform10's bootstrap breaks CI here until it is recreated.
+  - Bootstrap state is local (git-ignored); backup at
+    `s3://psb-tfstate-<account id>/bootstrap-backup/terraform.tfstate`. Re-copy after any
+    bootstrap apply.
+  - Repo is public (D41); odds data and model weights never go in the repo.
 - Next, step 2 (data): Singapore Pools odds scraper first (all in-scope markets, J1 + Serie A),
   so odds history starts accumulating; then results, HT scores, goal minutes, xG, lineups and
   injuries per the Source map in `docs/design.md`.

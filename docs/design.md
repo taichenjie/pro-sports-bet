@@ -15,11 +15,12 @@ This doc is the single source of truth: decisions, verified facts and open quest
 
 ## Decision log
 
-40 decisions agreed as of 20 Oct 2026, newest first. Superseded decisions stay listed and are marked.
+41 decisions agreed as of 20 Oct 2026, newest first. Superseded decisions stay listed and are marked.
 
 | # | Date | Decision | Rationale |
 | --- | --- | --- | --- |
-| D40 | 20 Oct 2026 | Infra v1: ap-southeast-1; Lambda + Fargate; EventBridge Scheduler with per-match pre-kick-off schedules; S3 + Parquet + DuckDB (no RDS); Telegram bot for picks; private repo, public later without odds data or weights; single prod environment plus local dev | Lowest cost and ops load; avoids a NAT gateway; instant alerts for withdrawals |
+| D41 | 20 Oct 2026 | Repo public from step 1 (supersedes the private-repo part of D40). Odds data and model weights stay out of the repo: they live in S3, and data files are git-ignored | GitHub Free gives environments with branch restrictions only to public repos; the prod apply role trusts the `prod` environment |
+| D40 | 20 Oct 2026 | Infra v1: ap-southeast-1; Lambda + Fargate; EventBridge Scheduler with per-match pre-kick-off schedules; S3 + Parquet + DuckDB (no RDS); Telegram bot for picks; ~~private repo, public later without odds data or weights~~ (superseded by D41); single prod environment plus local dev | Lowest cost and ops load; avoids a NAT gateway; instant alerts for withdrawals |
 | D39 | 20 Oct 2026 | Pick log records whether CJ placed each pick, with a note; CJ's own manual picks are logged in the same table, flagged by source | Separates model results from CJ's results; compares CJ vs model over the season |
 | D38 | 20 Oct 2026 | Flat 1-unit stakes in v1; Kelly-based staking after v1, once calibration is proven. Kelly fraction set at that point | Kelly amplifies probability errors, so it needs a calibrated model first |
 | D37 | 20 Oct 2026 | Evaluation: log loss, Brier score and calibration; chronological testing with no leakage; results per league and market; closing-line value and ROI per market | Judge probabilities, not hit rates; prove edge against the market |
@@ -494,7 +495,7 @@ pro-sports-bet/
 
 - [x] Storage: S3 + Parquet + DuckDB for v1, no RDS (D40)
 - [x] Pick delivery: Telegram bot (D40)
-- [x] Repo private now; public later as a portfolio piece without odds data or model weights (D40)
+- [x] Repo public from step 1; odds data and model weights never in the repo (D41, supersedes the private-repo part of D40)
 - [x] One environment (prod) plus local development (D40)
 
 ## Feature lifecycle
@@ -578,6 +579,7 @@ Fixtures that set the derby flag (D12, D14). The flag fires only when the fixtur
 
 | Date | Change |
 | --- | --- |
+| 20 Oct 2026 | D41: repo made public so the prod environment works on GitHub Free; D40 marked partly superseded |
 | 20 Oct 2026 | D40: infra agreed. Feature lifecycle and build plan added |
 | 20 Oct 2026 | D38–D39: pick log agreed (odds\_snapshots, predictions, picks); flat staking for v1, Kelly after; CJ placement and manual picks tracked |
 | 20 Oct 2026 | D34–D37: remaining features agreed; ChatGPT review refinements folded into F5, F7, A1, A3, A5, R2, L3, L7; Evaluation section added |
